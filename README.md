@@ -1,2 +1,2 @@
-# Enonce2-42XZD
- L'Énoncé 2 de 42 -- GIT à Forker
+# Énoncé 2 - 42XZD
+ Faites bien attention à Forker le projet, et surtout SURTOUT faites des pushs régulier :) Bon courage
