@@ -144,12 +144,22 @@ function tcm_show($atts = array())
     </script>
     
 <!-- end of HTML code --------------------------------------------------------->
-    <?php
-    return ob_get_clean();
+    <?php return ob_get_clean();
 }
 
 function tcm_shortcode($atts = array()) 
 {
+    static $has_one_instance = false;
+
+    if ($has_one_instance)
+    {
+        ob_start(); ?>
+        <script> 
+            alert("Error: only one tcm-chatbot allowed per-page");
+        </script>
+        <?php return ob_get_clean();
+    }
+    $has_one_instance = true;
     return tcm_show($atts);
 }
 
@@ -157,6 +167,3 @@ function tcm_shortcode($atts = array())
 add_shortcode('tcm', 'tcm_shortcode');
 
 ?>
-
-
-
