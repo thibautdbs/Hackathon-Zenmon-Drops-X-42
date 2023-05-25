@@ -18,9 +18,9 @@ function tcm_show()
     <style>
         .tcm-main
         {
+            box-sizing: border-box;
             border-radius: 10px;
             box-shadow: 2px 2px 8px -2px #464434;
-
         }
 
         .tcm-list
@@ -34,14 +34,41 @@ function tcm_show()
         .tcm-list > li
         {
             border-radius: 5px;
-            border: 1px solid;
             list-style: none;
+        }
+        
+        .tcm-list > li span
+        {
+            margin: 0;
+            margin-right: 5px;
+            padding: 0px 10px;
+            border-radius: 15px;
+        }
+
+        .tcm-list > li p
+        {
+            margin: 0;
             padding: 5px;
         }
 
-        .tcm-botMsg
+        .tcm-user-msg
         {
+            background-color: #C3F8FF;
+        }
 
+        .tcm-user-msg span
+        {
+            background-color: #ABD9FF;
+        }
+
+        .tcm-bot-msg
+        {
+            background-color: #FFF6BF;
+        }
+        
+        .tcm-bot-msg span
+        {
+            background-color: #ffd966;
         }
     </style>
 
@@ -54,20 +81,33 @@ function tcm_show()
 
     <!-- javascript code behind the chat bot -->
     <script>
-        chatbot = document.getElementById("chatbot");
-        chatbotList = document.getElementById("chatbot-list");
+        const chatbot = document.getElementById("chatbot");
+        const chatbotList = document.getElementById("chatbot-list");
         
-        function appendMsg(msg)
+        function appendBotMsg(msg)
+        {            
+            node = document.createElement("div");
+            node.innerHTML = 
+                `<li class="tcm-bot-msg">
+                    <p><span>Bot</span>${msg}</p>
+                </li>`;
+            chatbotList.appendChild(node.firstChild);
+        }
+        
+        function appendUserMsg(msg)
         {
-            element = document.createElement("li");
-            element.innerHTML = msg;
-            chatbotList.appendChild(element);
+            node = document.createElement("div");
+            node.innerHTML = 
+                `<li class="tcm-user-msg">
+                    <p><span>User</span>${msg}</p>
+                </li>`;
+            chatbotList.appendChild(node.firstChild);
         }
 
-        appendMsg("msg1")
-        appendMsg("msg2")
-        appendMsg("msg3")
-        appendMsg("msg4")
+        appendUserMsg("msg1")
+        appendBotMsg("msg2")
+        appendUserMsg("msg3")
+        appendBotMsg("msg4")
     </script>
     
 <!-- end of HTML code --------------------------------------------------------->
