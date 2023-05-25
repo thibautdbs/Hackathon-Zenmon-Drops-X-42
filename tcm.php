@@ -10,8 +10,8 @@
 
 function send_chatgpt_message(
     // array $messages = ["coucou chat gpt"],
-    array $messages = [["role" => "system", "content" => "Peux tu repondre uniquement et rien de plus : Bonjour Francis"]],
-    string $api_key = "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",
+    array $messages = [["role" => "system", "content" => "Ne reponds plus que par OUI"]],
+    string $api_key = "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",
     string $model = "gpt-3.5-turbo"
 ): string {
     $ch = curl_init( "https://api.openai.com/v1/chat/completions" );
@@ -63,16 +63,16 @@ function send_chatgpt_message(
                 } else {
                     error_log( "Invalid ChatGPT response: " . $delta );
                 }
-        
+                // echo "RESULTAT : ";
+                // echo $content;
                 $response_text .= $content;
         
-                echo "data: " . json_encode( ["content" => $content] ) . "\n\n";
+                // echo "data: " . json_encode( ["content" => $content] ) . "\n\n";
                 flush();
             }
         
             if( connection_aborted() ) return 0;
-        
-            return strlen( $data );
+                return strlen( $data );
         }
     ] );
     
@@ -92,62 +92,6 @@ function send_chatgpt_message(
 
     return $response_text;
 }
-
-
-/*
-function genererTexteChatGPT($prompt, $apiKey)
-{
-    $apiUrl = 'https://api.openai.com/v1/chat/completions';
-    $model = 'gpt-3.5-turbo';
-
-    $data = array(
-        'prompt' => $prompt,
-        'max_tokens' => 50,
-        'temperature' => 0.8
-    );
-
-    $headers = array(
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $apiKey
-    );
-
-    $ch = curl_init($apiUrl);
-
-    curl_setopt_array($ch, array(
-        CURLOPT_URL => 'https://api.openai.com/v1/engines/'.$model.'/completions',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_HTTPHEADER => $headers,
-    ));
-
-    $response = curl_exec($ch);
-
-    if ($response === false)
-    {
-        echo 'RATE';
-        echo 'Erreur lors de lappel à lAPI : ' . curl_error($ch);
-        return null;
-    }
-    else
-    {
-        $decodedResponse = json_decode($response, true);
-        if (isset($decodedResponse['choices'][0]['text'])) {
-            $generatedText = $decodedResponse['choices'][0]['text'];
-            echo 'Texte généré : ' . $generatedText;
-        } else {
-            echo 'Aucune réponse générée.';
-        }
-    }
-
-    curl_close($ch);
-}
-*/
 
 function tcm_show()
 {
@@ -218,12 +162,14 @@ function tcm_show()
 
 function tcm_shortcode() 
 {
-    // $stp = 'test : ';
-    // echo $stp;
-    // $stp = genererTexteChatGPT('reponds par oui ou par non : Paris est elle la capitale de la France ?', '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');
-    send_chatgpt_message();
-    // echo $stp;
-    // return tcm_show();
+/*
+
+/*
+    $res = send_chatgpt_message();
+    echo "Resulat final : ";
+    print_r($res);
+    $res = send_chatgpt_message2();
+    print_r($res);
 }
 
 // register the [tcm] short code to be used in wordpress pages
