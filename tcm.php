@@ -8,8 +8,15 @@
 * Author URI: https://github.com/thibautdbs
 **/
 
-function tcm_show()
+function tcm_show($atts = array())
 {
+    // $wporg_atts = shortcode_atts(
+	// 	array(
+	// 		'width' => 'inherit',
+    //         'height' => 'inherit',
+	// 	), $atts, $tag
+	// );
+
     ob_start(); ?>
 <!-- HTML code that will replace [tcm] shortcode ------------------------------>
 <!-- executed on frontend ----------------------------------------------------->
@@ -29,6 +36,8 @@ function tcm_show()
             padding:5px;
             flex-direction: column;
             gap: 5px;
+            
+            overflow: hidden;
         }
 
         .tcm-list > li
@@ -76,7 +85,10 @@ function tcm_show()
     <div id="chatbot" class="tcm-main">
         <ul id="chatbot-list" class="tcm-list">
         </ul>
-
+        <form id="tcm-form" action="/api/process/form" method="post">
+            <input type="text" name="tcm-input" id="tcm-input" required>
+            <button type="submit">SubmitAction</button>
+        </form>
     </div>
 
     <!-- javascript code behind the chat bot -->
@@ -104,10 +116,31 @@ function tcm_show()
             chatbotList.appendChild(node.firstChild);
         }
 
-        appendUserMsg("msg1")
         appendBotMsg("msg2")
         appendUserMsg("msg3")
         appendBotMsg("msg4")
+
+        document.forms['tcm-form'].addEventListener('submit', (event) => {
+            event.preventDefault();
+            // TODO do something here to show user that form is being submitted
+            data = new FormData(event.target);
+            appendUserMsg(data.get("tcm-input"));
+
+            fetch(event.target.action, {
+                method: 'POST',
+                body: new URLSearchParams(data) // event.target is the form
+            }).then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            }).then((body) => {
+                // TODO handle body
+            }).catch((error) => {
+                // TODO handle error
+            });
+        });
+
     </script>
     
 <!-- end of HTML code --------------------------------------------------------->
@@ -115,9 +148,9 @@ function tcm_show()
     return ob_get_clean();
 }
 
-function tcm_shortcode() 
+function tcm_shortcode($atts = array()) 
 {
-    return tcm_show();
+    return tcm_show($atts);
 }
 
 // register the [tcm] short code to be used in wordpress pages
