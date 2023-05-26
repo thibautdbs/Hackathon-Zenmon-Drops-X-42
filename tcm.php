@@ -179,13 +179,45 @@ function tcm_show($atts = array())
             width: 20px;
             height: 20px;
         }
+
+        #tcm-waiting-indicator
+        {
+            display: none;
+            margin: 0;
+            padding-left: 10px;
+
+            color: transparent;
+            background-image: linear-gradient(90deg, lightgray 50%, gray 50%);
+            background-position: 100%;
+            background-size: 200% 100%;
+            background-clip: text;
+            -webkit-background-clip: text;
+  
+            animation: blink 1s infinite;
+            font-weight: bold;
+            transform: scaleY(1.5) translateY(-5px);
+        }
+
+        @-webkit-keyframes blink {
+            0% { background-position: 0; }
+            50% { background-position: 15px; }
+            100% { background-position: 30px; }
+        }
+
+        @keyframes blink {
+            0% { background-position: 0; }
+            50% { background-position: 15px; }
+            100% { background-position: 30px; }
+        }
+
     </style>
 
     <!-- the chatbot container -->
     <div id="tcm-chatbot">
         <ul id="tcm-list">
         </ul>
-        <form id="tcm-form" action="/api/process/form" method="post">
+        <p id="tcm-waiting-indicator">...</p>
+        <form id="tcm-form" action="<?php echo plugins_url( 'ask.php', __FILE__ ); ?>" method="post">
             <input type="text" name="tcm-input" id="tcm-input" required>
             <button type="submit" id="tcm-button">
                 <svg 
@@ -213,6 +245,8 @@ function tcm_show($atts = array())
     <script>
         const chatbot = document.getElementById("tcm-chatbot");
         const chatbotList = document.getElementById("tcm-list");
+        const chatbotInput = document.getElementById("tcm-input");
+        const chatbotDots = document.getElementById("tcm-waiting-indicator");
 
         function appendBotMsg(msg)
         {            
@@ -239,24 +273,29 @@ function tcm_show($atts = array())
         document.forms['tcm-form'].addEventListener('submit', (event) => {
             event.preventDefault();
 
-            // TODO do something here to show user that form is being submitted
-            data = new FormData(event.target);
+            data = new FormData(event.target); // event.target is the form
             appendUserMsg(data.get("tcm-input"));
             event.target.reset();
+            chatbotInput.disabled = true;
+            chatbotDots.style.display = 'initial';
             chatbotList.scrollTo(0, chatbotList.scrollHeight);
 
             fetch(event.target.action, {
                 method: 'POST',
-                body: new URLSearchParams(data) // event.target is the form
+                body: new URLSearchParams(data) 
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                return response.json();
+                return response.text();
             }).then((body) => {
-                // TODO handle body
+                appendBotMsg(body);
             }).catch((error) => {
-                // TODO handle error
+                appendBotMsg("error" + error);
+            }).finally(() => {
+                chatbotDots.style.display = 'none';
+                chatbotInput.disabled = false;
+                chatbotList.scrollTo(0, chatbotList.scrollHeight);
             });
         });
     </script>
@@ -278,6 +317,7 @@ function tcm_shortcode($atts = array())
         <?php return ob_get_clean();
     }
     $has_one_instance = true;
+
     return tcm_show($atts);
 }
 
@@ -288,3 +328,4 @@ function tcm_shortcodes_init()
 
 add_action('init', 'tcm_shortcodes_init');
 ?>
+
