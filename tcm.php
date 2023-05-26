@@ -164,6 +164,11 @@ function tcm_show($atts = array())
             outline: none;
         }
 
+        #tcm-input:disabled
+        {
+            background-color: transparent;
+        }
+
         #tcm-button
         {
             font-family: 'Red Hat Display', sans-serif;
@@ -217,8 +222,8 @@ function tcm_show($atts = array())
         <ul id="tcm-list">
         </ul>
         <p id="tcm-waiting-indicator">...</p>
-        <form id="tcm-form" action="<?php echo plugins_url( 'ask.php', __FILE__ ); ?>" method="post">
-            <input type="text" name="tcm-input" id="tcm-input" required>
+        <form autocomplete="off" id="tcm-form" action="<?php echo plugins_url( 'ask.php', __FILE__ ); ?>" method="post">
+            <input autocomplete="off" type="text" name="tcm-input" id="tcm-input" required>
             <button type="submit" id="tcm-button">
                 <svg 
                         version="1.1"

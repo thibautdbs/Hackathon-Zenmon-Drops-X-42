@@ -4,8 +4,8 @@ define('MODEL', "gpt-3.5-turbo");
 define('API_KEY', '');
 
 define('INVALID_QUESTION_ERROR', 'je suis une IA specialisee uniquement en neurosciences, je ne comprends pas la question');
-define('QUESTION_VALIDATION_CONTEXT', 'tu reponds que par 1 ou 0, si la reponse a la question ne parles pas uniquement de neuroscience reponds 0, si elle parle exclusivement des neurosciences réponds 1.');
-define('CONVERSATION_CONTEXT', 'tu es un expert en neuroscience, essayes de repondre en deux phrases avec un ton pedagogue.');
+define('QUESTION_VALIDATION_CONTEXT', 'answer with 1 if the question is about neuroscience, and answer with 0 otherwise');
+define('CONVERSATION_CONTEXT', 'Tu es Gary. Tu es un expert en neuroscience, essayes de repondre en deux phrases avec un ton pedagogue.');
 
 function tcm_api_request($conversation): string
 {
